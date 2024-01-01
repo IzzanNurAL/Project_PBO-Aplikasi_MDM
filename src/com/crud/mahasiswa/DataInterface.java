@@ -5,6 +5,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,23 +19,26 @@ public class DataInterface {
                 statNama = jTextFieldName.getText();
                 statKelas = jTextFieldClass.getText();
                 statIpk = jTextFieldIpk.getText();
-
-                try{
-                    preparedStatement = Connector.connectDB().prepareStatement("INSERT INTO mahasiswa(nim,nama,kelas,ipk) values(?,?,?,?);");
-                    preparedStatement.setString(1,statNim);
-                    preparedStatement.setString(2,statNama);
-                    preparedStatement.setString(3,statKelas);
-                    preparedStatement.setString(4,statIpk);
-                    preparedStatement.executeUpdate();
-                    showData();
-                    JOptionPane.showMessageDialog(null,"Data Berhasil Ditambahkan");
-                }catch (SQLException err){
-                    Logger.getLogger(DataInterface.class.getName()).log(Level.SEVERE, null, err);
+                if(!Objects.equals(statNim, "") && !Objects.equals(statNama, "") && !Objects.equals(statKelas, "") && !Objects.equals(statIpk, "")) {
+                    try {
+                        preparedStatement = Connector.connectDB().prepareStatement("INSERT INTO mahasiswa(nim,nama,kelas,ipk) values(?,?,?,?);");
+                        preparedStatement.setString(1, statNim);
+                        preparedStatement.setString(2, statNama);
+                        preparedStatement.setString(3, statKelas);
+                        preparedStatement.setString(4, statIpk);
+                        preparedStatement.executeUpdate();
+                        showData();
+                        JOptionPane.showMessageDialog(null, "Data Berhasil Ditambahkan");
+                    } catch (SQLException err) {
+                        Logger.getLogger(DataInterface.class.getName()).log(Level.SEVERE, null, err);
+                    }
+                    jTextFieldNim.setText("");
+                    jTextFieldName.setText("");
+                    jTextFieldClass.setText("");
+                    jTextFieldIpk.setText("");
+                } else{
+                    JOptionPane.showMessageDialog(null, "Isi Semua Data");
                 }
-                jTextFieldNim.setText("");
-                jTextFieldName.setText("");
-                jTextFieldClass.setText("");
-                jTextFieldIpk.setText("");
             }
         });
         updateButton.addActionListener(new ActionListener() {
